@@ -53,7 +53,7 @@ class WpaSupplicantConf:
                 if network is None:
                     self._fields[left] = right
                 else:
-                    network[left] = right
+                    network[left] = dequote(right)
 
     def fields(self):
         return self._fields
@@ -75,13 +75,22 @@ class WpaSupplicantConf:
             f.write("\nnetwork={\n")
             f.write('    ssid="{}"\n'.format(ssid))
             for name, value in info.items():
+                if isinstance(value, str):
+                    value = '"'+value+'"'
                 f.write("    {}={}\n".format(name, value))
             f.write("}\n")
 
 
 def dequote(v):
-    if len(v) < 2:
-        return v
     if v.startswith('"') and v.endswith('"'):
         return v[1:-1]
-    return v
+    try:
+        # try to cast to int
+        return int(v)
+    except ValueError:
+        try:
+            # try to cast to float
+            return float(v)
+        except ValueError:
+            # well then it's a string...
+            return v
