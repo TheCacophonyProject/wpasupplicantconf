@@ -88,12 +88,12 @@ def test_networks():
     assert conf.fields() == {}
     assert conf.networks() == OrderedDict([
         ('foo bar', OrderedDict([
-            ("psk", '"secret"'),
+            ("psk", 'secret'),
             ("eap", "TLS"),
         ])),
         ('nsa', OrderedDict([
-            ("psk", '"password"'),
-            ("scan_ssid", "1"),
+            ("psk", 'password'),
+            ("scan_ssid", 1),
         ])),
     ])
 
@@ -142,7 +142,7 @@ def test_full_config():
     ])
     assert conf.networks() == OrderedDict([
         ('foo bar', OrderedDict([
-            ("psk", '"secret"'),
+            ("psk", 'secret'),
             ("eap", "TLS"),
         ])),
     ])
@@ -176,7 +176,7 @@ def test_add_network():
 
     assert conf.networks() == OrderedDict([
         ('foo bar', {
-            "psk": '"secret"'
+            "psk": 'secret'
         }),
         ('another', {
             "psk": "hi"
@@ -201,7 +201,7 @@ def test_remove_network():
     conf.remove_network("bar")
     assert conf.networks() == OrderedDict([
         ('foo', {
-            "psk": '"foopass"'
+            "psk": 'foopass'
         }),
     ])
 
@@ -221,8 +221,8 @@ def test_write():
         """))
     conf = WpaSupplicantConf(inp)
 
-    conf.add_network("foo", psk='"foo pass"', wow='man')
-    conf.add_network("bar", psk='"bar pass"')
+    conf.add_network("foo", psk='foo pass', wow='man')
+    conf.add_network("bar", psk='bar pass')
 
     out = StringIO()
     conf.write(out)
@@ -235,7 +235,7 @@ update_config=1
 network={
     ssid="foo"
     psk="foo pass"
-    wow=man
+    wow="man"
 }
 
 network={
