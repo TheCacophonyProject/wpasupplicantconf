@@ -243,3 +243,39 @@ network={
     psk="bar pass"
 }
 """
+
+def test_quotes():
+    inp = StringIO(
+        dedent("""\
+        country=NZ
+        ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+        update_config = 1
+        """))
+    conf = WpaSupplicantConf(inp)
+
+    conf.add_network("foo", string='string', float=1.2, int=3)
+
+    out = StringIO()
+    conf.write(out)
+
+    assert out.getvalue() == """\
+country=NZ
+ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+update_config=1
+
+network={
+    ssid="foo"
+    string="string"
+    float=1.2
+    int=3
+}
+"""
+
+    conf_read = WpaSupplicantConf(out.getvalue().splitlines())
+    assert conf_read.networks() == OrderedDict([
+        ('foo', {
+            "string": 'string',
+            "float": 1.2,
+            "int": 3
+        }),
+    ])
